@@ -10,7 +10,7 @@ DAY  ?= 01
 YEAR ?= 2025
 # C++ compiler and flags
 CXX      := g++
-CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic -O2 -fsanitize=address,undefined -fno-sanitize-recover=all
+CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all
 
 # --- File and Directory Definitions ---
 DIR         := day-$(DAY)
