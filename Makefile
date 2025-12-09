@@ -13,7 +13,7 @@ CXX      := g++
 CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all
 
 # --- File and Directory Definitions ---
-DIR         := day-$(DAY)
+DIR         := $(YEAR)/day-$(DAY)
 SOURCE      := $(DIR)/main.cpp
 EXECUTABLE  := $(DIR)/main.out
 INPUT       := $(DIR)/input.txt

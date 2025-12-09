@@ -1,3 +1,3 @@
-## Advent of Code 2025
+## Advent of Code
 
 Solutions in C++
