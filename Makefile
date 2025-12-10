@@ -11,12 +11,23 @@ YEAR ?= 2025
 # C++ compiler and flags
 CXX      := g++
 CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all
+CMAKE    := cmake
+MAKE     := make
 
 # --- File and Directory Definitions ---
 DIR         := $(YEAR)/day-$(DAY)
 SOURCE      := $(DIR)/main.cpp
-EXECUTABLE  := $(DIR)/main.out
 INPUT       := $(DIR)/input.txt
+
+# Check for CMakeLists.txt
+CMAKE_FILE := $(wildcard $(DIR)/CMakeLists.txt)
+
+# Conditionally set EXECUTABLE
+ifeq ($(CMAKE_FILE),)
+	EXECUTABLE := $(DIR)/main.out
+else
+	EXECUTABLE := $(DIR)/build/main.out
+endif
 
 # --- Environment ---
 # Load the session cookie from the .env file.
@@ -38,11 +49,21 @@ run: $(EXECUTABLE) $(INPUT)
 	@./$(EXECUTABLE) < $(INPUT)
 	@echo "------------------------"
 
+# --- Build Rules ---
+ifeq ($(CMAKE_FILE),)
 # Compile the source code.
 # This rule runs only if main.cpp is newer than main.out or if main.out doesn't exist.
 $(EXECUTABLE): $(SOURCE)
 	@echo "Compiling $(SOURCE)..."
 	@$(CXX) $(CXXFLAGS) -o $@ $<
+else
+# Build using CMake.
+$(EXECUTABLE): $(SOURCE) $(CMAKE_FILE)
+	@echo "Running CMake for $(DIR)..."
+	@mkdir -p $(DIR)/build
+	@$(CMAKE) -S $(DIR) -B $(DIR)/build
+	@$(MAKE) -C $(DIR)/build
+endif
 
 # Fetch the puzzle input.
 # This rule runs only if the input file doesn't exist.
@@ -62,7 +83,11 @@ $(INPUT):
 # Clean up all generated files.
 clean:
 	@echo "Cleaning up generated files..."
-	@rm -f day-*/main.out day-*/input.txt
+	@find $(YEAR) -name "main.out" -type f -delete
+	@find $(YEAR) -name "input.txt" -type f -delete
+	@find $(YEAR) -name "build" -type d -exec rm -rf {} +
+	@find . -name "*.dSYM" -type d -exec rm -rf {} +
+
 
 # Prevent make from deleting the input file after compilation
 .SECONDARY: $(INPUT)
