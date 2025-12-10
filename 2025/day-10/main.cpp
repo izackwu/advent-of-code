@@ -55,6 +55,7 @@ auto part_2(const Joltages &target_joltages,
   //   Each machine's joltage is exactly satisfied
 
   Highs highs;
+  highs.setOptionValue("output_flag", false);
   // 1. Define Variables (Columns)
   // We loop through the known number of variables and add them to the solver.
   for (size_t i = 0; i < buttons.size(); ++i) {
@@ -88,7 +89,6 @@ auto part_2(const Joltages &target_joltages,
   }
 
   //   highs.writeModel("debug_model.lp");
-  highs.setOptionValue("output_flag", false);
   highs.run();
 
   if (highs.getModelStatus() != HighsModelStatus::kOptimal) {
