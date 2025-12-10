@@ -61,7 +61,7 @@ else
 $(EXECUTABLE): $(SOURCE) $(CMAKE_FILE)
 	@echo "Running CMake for $(DIR)..."
 	@mkdir -p $(DIR)/build
-	@$(CMAKE) -S $(DIR) -B $(DIR)/build
+	@$(CMAKE) -S $(DIR) -B $(DIR)/build -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 	@$(MAKE) -C $(DIR)/build
 endif
 
